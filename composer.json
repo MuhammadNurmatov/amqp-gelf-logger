@@ -1,0 +1,27 @@
+{
+    "name": "muhammadnurmatov/amqp-gelf-logger",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "AmqpGelfLogger\\": "src/",
+            "Tests\\": "tests/"
+        }
+    },
+
+    "authors": [
+        {
+            "name": "MuhammadNurmatov",
+            "email": "nurmatov.muhammad000@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "laravel/framework": "^9.0|^10.0|^11.0",
+        "php-amqplib/php-amqplib": "^3.7"
+    },
+
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

@@ -1,0 +1,69 @@
+<?php
+
+namespace AmqpGelfLogger;
+
+use Illuminate\Support\Facades\Log;
+use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\LogRecord;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+use function Laravel\Prompts\select;
+
+class RabbitMQLogHandler extends AbstractProcessingHandler
+{
+    private static ?AMQPStreamConnection $connection = null;
+    public ?array $config;
+    public ?array $logConfig;
+    public function __construct(array $logConfig) {
+
+        parent::__construct($logConfig['level']);
+
+       $this->config = config('amqp-gelf-logger');
+       $this->logConfig = $logConfig;
+    }
+
+    protected function write(LogRecord $record): void
+    {
+        $this->initializeRabbitMQ();
+        $this->publish($record);
+    }
+
+    private function initializeRabbitMQ(): void
+    {
+        if (self::$connection === null || !self::$connection->isConnected()) {
+            self::$connection = new AMQPStreamConnection(
+                $this->config['host'],
+                $this->config['port'],
+                $this->config['user'],
+                $this->config['password']
+            );
+        }
+    }
+
+    private function publish(LogRecord $record): void
+    {
+        $channel = self::$connection->channel();
+        $formatted = $this->getFormatter()->format($record);
+
+        $msg = new AMQPMessage(
+            $formatted,
+            [
+                'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
+                'content_type' => 'application/json'
+            ]
+        );
+
+        $routingKey = $this->logConfig['routing_key'] ?? $record->channel;
+        $channel->basic_publish($msg, $this->config['exchange'], $routingKey);
+
+        $channel->close();
+    }
+
+    public function __destruct()
+    {
+        if (self::$connection !== null) {
+            self::$connection->close();
+            self::$connection = null;
+        }
+    }
+}
