@@ -67,7 +67,7 @@ use Illuminate\Support\Facades\Log;
 Log::channel('amqp')->info('User logged in', ['user_id' => 1]);
 Log::channel('amqp')->error('Something broke!', ['exception' => $exception]);
 ```
-## ➕ Optional Addon
+## ➕ Optional 
 
 If you want to send your default log levels (e.g., error, info, debug) via this handler, you should install this package:
 
