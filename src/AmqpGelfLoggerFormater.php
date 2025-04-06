@@ -1,6 +1,6 @@
 <?php
 
-namespace AmqpGelfLogger;
+namespace MuhammadN\AmqpGelfLogger;
 
 use Monolog\Formatter\JsonFormatter;
 use Monolog\LogRecord;

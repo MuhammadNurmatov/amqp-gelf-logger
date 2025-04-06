@@ -1,7 +1,7 @@
 <?php
 
-use AmqpGelfLogger\RabbitMQLogger;
-use AmqpGelfLogger\RabbitMQLogHandler;
+use MuhammadN\AmqpGelfLogger\RabbitMQLogger;
+use MuhammadN\AmqpGelfLogger\RabbitMQLogHandler;
 use Monolog\Logger;
 
 use Tests\TestCase;

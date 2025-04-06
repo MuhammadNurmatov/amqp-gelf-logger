@@ -1,8 +1,7 @@
 <?php
 
-namespace AmqpGelfLogger;
+namespace MuhammadN\AmqpGelfLogger;
 
-use Illuminate\Support\Facades\Log;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\LogRecord;
 use PhpAmqpLib\Connection\AMQPStreamConnection;

@@ -1,6 +1,6 @@
 <?php
 
-namespace AmqpGelfLogger;
+namespace MuhammadN\AmqpGelfLogger;
 
 use Illuminate\Support\Facades\Log;
 use Monolog\Handler\HandlerInterface;
