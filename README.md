@@ -69,7 +69,7 @@ Log::channel('amqp')->error('Something broke!', ['exception' => $exception]);
 ```
 ## ➕ Optional Addon
 
-If you want to set your default channel via this handler, you should install this package:
+If you want to send your default log levels (e.g., error, info, debug) via this handler, you should install this package:
 
 ```bash
 composer require anboz/custom-logger
