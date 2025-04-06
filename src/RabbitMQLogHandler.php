@@ -17,7 +17,7 @@ class RabbitMQLogHandler extends AbstractProcessingHandler
 
         parent::__construct($logConfig['level']);
 
-       $this->config = config('amqp-gelf-logger');
+       $this->config = config('amqp-gelf-logger.rabbitmq');
        $this->logConfig = $logConfig;
     }
 

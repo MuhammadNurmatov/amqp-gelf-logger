@@ -19,11 +19,7 @@ composer require muhammadnurmatov/amqp-gelf-logger
 
 ### 1. Publish Config File
 
-You can manually create the config file at `config/amqp-gelf-logger.php` or publish it via Artisan:
-
-```bash
-php artisan vendor:publish --tag=amqp-gelf-logger-config
-```
+You can manually create the config file at `config/amqp-gelf-logger.php`:
 
 ### 2. Edit `config/amqp-gelf-logger.php`
 
