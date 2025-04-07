@@ -1,4 +1,4 @@
-# 📦 Laravel AMQP GELF Logger — Send Logs to Graylog via AMQP or GELF
+#  Laravel AMQP GELF Logger — Send Logs to Graylog via AMQP or GELF
 
 [![Latest Stable Version](https://poser.pugx.org/muhammadnurmatov/amqp-gelf-logger/v/stable)](https://packagist.org/packages/muhammadnurmatov/amqp-gelf-logger)
 [![Total Downloads](https://poser.pugx.org/muhammadnurmatov/amqp-gelf-logger/downloads)](https://packagist.org/packages/muhammadnurmatov/amqp-gelf-logger)
@@ -17,7 +17,7 @@ composer require muhammadnurmatov/amqp-gelf-logger
 ```
 # ⚙️ Configuration
 
-### 1. Publish Config File
+### 1. Config File
 
 You can manually create the config file at `config/amqp-gelf-logger.php`:
 
