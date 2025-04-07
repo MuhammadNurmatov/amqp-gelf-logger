@@ -42,7 +42,7 @@ return [
 ];
 ```
 
-## 📡 Logging Channel Setup
+##  Logging Channel Setup
 
 Add a custom logging channel in `config/logging.php`:
 ```php
@@ -50,14 +50,13 @@ Add a custom logging channel in `config/logging.php`:
     'driver' => 'custom',
     'via' => \MuhammadN\AmqpGelfLogger\RabbitMQLogger::class,
     'routeing_key' => 'graylog',
-    'queue_name' => 'graylog',
     'name' => 'graylog',
     'level' => 'debug',
     'path' => storage_path('logs/graylog.log'),
     'days' => 14,
 ],
 ```
-## 🧪 Usage
+##  Usage
 
 You can use the custom logger like any other Laravel log channel:
 
@@ -75,7 +74,7 @@ If you want to send your default log levels (e.g., error, info, debug) via this 
 composer require anboz/custom-logger
 ```
 
-## 📄 License
+##  License
 
 This package is open-sourced software licensed under the MIT license.
 
