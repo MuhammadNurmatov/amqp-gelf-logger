@@ -36,6 +36,7 @@ class AmqpGelfLoggerFormater extends JsonFormatter
             'source' => config('app.name'),
             'short_message' => $record->message,
             'context' => $context,
+            'server_ip' => gethostbyname(gethostname()),
         ];
     }
 }

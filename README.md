@@ -26,23 +26,25 @@ You can manually create the config file at `config/amqp-gelf-logger.php`:
 ```php
 return [
     'rabbitmq' => [
-        'host' => env('RABBITMQ_HOST', '192.168.14.169'),
+        'host' => env('RABBITMQ_HOST'),
         'port' => env('RABBITMQ_PORT', 5672),
-        'user' => env('RABBITMQ_USER', 'logs'),
-        'password' => env('RABBITMQ_PASSWORD', 'logs'),
-        'exchange' => env('RABBITMQ_EXCHANGE', 'test'),
+        'user' => env('RABBITMQ_USER'),
+        'password' => env('RABBITMQ_PASSWORD'),
+        'vhost' => env('RABBITMQ_VHOST', '/'),
+        'exchange' => env('RABBITMQ_EXCHANGE'),
         'exchange_type' => env('RABBITMQ_EXCHANGE', 'topic'),
+        'routing_key' => env('LOG_RABBITMQ_EXCHANGE'),
         'use_tls' => env('RABBITMQ_USE_TLS', false),
         'verify_peer' => env('RABBITMQ_VERIFY_PEER', false),
         'verify_peer_name' => env('RABBITMQ_VERIFY_PEER_NAME', false),
-        'cafile' => env('RABBITMQ_CAFILE', ''),
-        'local_cert' => env('RABBITMQ_LOCAL_CERT', ''),
-        'local_pk' => env('RABBITMQ_LOCAL_PK', ''),
+        'cafile' => env('RABBITMQ_CAFILE'),
+        'local_cert' => env('RABBITMQ_LOCAL_CERT'),
+        'local_pk' => env('RABBITMQ_LOCAL_PK'),
         'app_name' => env('APP_NAME', 'Laravel'),
         'app_env' => env('APP_ENV', 'production'),
         'level' => env('RABBITMQ_LOG_LEVEL', 'debug'),
         'path' => storage_path('logs/logger/logs.log'),
-        'days' => 14
+        'days' => 14,
     ]
 ];
 ```
@@ -55,7 +57,6 @@ Add a custom logging channel in `config/logging.php`:
 'amqp' => [
     'driver' => 'custom',
     'via' => \MuhammadN\AmqpGelfLogger\RabbitMQLogger::class,
-    'routeing_key' => 'graylog',
     'name' => 'graylog',
     'level' => 'debug',
     'path' => storage_path('logs/graylog.log'),
@@ -72,6 +73,22 @@ use Illuminate\Support\Facades\Log;
 Log::channel('amqp')->info('User logged in', ['user_id' => 1]);
 Log::channel('amqp')->error('Something broke!', ['exception' => $exception]);
 ```
+Expected Log Structure
+```json
+{
+    "timestamp": "2025-04-07 15:09:12",
+    "env_mode": "production",
+    "level": "info",
+    "channel": "amqp",
+    "source": "Test",
+    "short_message": "User logged in",
+    "context": {
+        "user_id": 1
+    },
+    "server_ip": "127.0.0.1"
+}
+```
+
 ## ➕ Optional 
 
 If you want to send your default log levels (e.g., error, info, debug) via this handler, you should install this package:

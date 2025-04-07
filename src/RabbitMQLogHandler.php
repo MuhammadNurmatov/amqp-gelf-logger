@@ -87,7 +87,7 @@ class RabbitMQLogHandler extends AbstractProcessingHandler
             ]
         );
 
-        $routingKey = $this->logConfig['routing_key'] ?? $record->channel;
+        $routingKey = $this->config['routing_key'] ?? $record->channel;
         $channel->basic_publish($msg, $this->config['exchange'], $routingKey);
 
         $channel->close();
