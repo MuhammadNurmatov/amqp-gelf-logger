@@ -15,7 +15,7 @@ Install the package via Composer:
 ```bash
 composer require muhammadnurmatov/amqp-gelf-logger
 ```
-# ⚙️ Configuration
+#  Configuration
 
 ### 1. Config File
 
