@@ -26,21 +26,27 @@ You can manually create the config file at `config/amqp-gelf-logger.php`:
 ```php
 return [
     'rabbitmq' => [
-        'host' => env('LOG_RABBITMQ_HOST', '127.0.0.1'),
-        'port' => env('LOG_RABBITMQ_PORT', 5672),
-        'user' => env('LOG_RABBITMQ_USER', 'guest'),
-        'password' => env('LOG_RABBITMQ_PASSWORD', 'guest'),
-        'exchange' => env('LOG_RABBITMQ_EXCHANGE', 'logs'),
-        'exchange_type' => env('LOG_RABBITMQ_EXCHANGE_TYPE', 'direct'),
+        'host' => env('RABBITMQ_HOST', '192.168.14.169'),
+        'port' => env('RABBITMQ_PORT', 5672),
+        'user' => env('RABBITMQ_USER', 'logs'),
+        'password' => env('RABBITMQ_PASSWORD', 'logs'),
+        'exchange' => env('RABBITMQ_EXCHANGE', 'test'),
+        'exchange_type' => env('RABBITMQ_EXCHANGE', 'topic'),
+        'use_tls' => env('RABBITMQ_USE_TLS', false),
+        'verify_peer' => env('RABBITMQ_VERIFY_PEER', false),
+        'verify_peer_name' => env('RABBITMQ_VERIFY_PEER_NAME', false),
+        'cafile' => env('RABBITMQ_CAFILE', ''),
+        'local_cert' => env('RABBITMQ_LOCAL_CERT', ''),
+        'local_pk' => env('RABBITMQ_LOCAL_PK', ''),
         'app_name' => env('APP_NAME', 'Laravel'),
-        'app_env' => env('APP_ENV', 'local'),
-        'level' => env('LOG_RABBITMQ_LEVEL', 'error'),
-        'path' => storage_path('logs/amqp-gelf-logger.log'),
-        'name' => 'amqp-gelf-logger',
-        'day' => 14,
-    ],
+        'app_env' => env('APP_ENV', 'production'),
+        'level' => env('RABBITMQ_LOG_LEVEL', 'debug'),
+        'path' => storage_path('logs/logger/logs.log'),
+        'days' => 14
+    ]
 ];
 ```
+If you don't want to use SSL, set **use_tls = false** in the config.
 
 ##  Logging Channel Setup
 
