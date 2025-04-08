@@ -11,10 +11,9 @@ class AmqpGelfLoggerFormater extends JsonFormatter
     public function __construct()
     {
         parent::__construct();
-        $this->initServerIP();
     }
 
-    private static ?string $serverIP;
+    private static ?string $serverIP = null;
 
     public function format(LogRecord $record): string
     {
@@ -39,14 +38,16 @@ class AmqpGelfLoggerFormater extends JsonFormatter
             'source' => config('app.name'),
             'short_message' => $record->message,
             'context' => $context,
-            'server_ip' => static::$serverIP,
+            'server_ip' => $this->initServerIP(),
         ];
     }
 
-    private function initServerIP(): void
+    private function initServerIP(): ?string
     {
-        if (static::$serverIP == null) {
-            static::$serverIP = trim(shell_exec("hostname -I | awk '{print $1}'"));
+        if (self::$serverIP == null) {
+            self::$serverIP = trim(shell_exec("hostname -I | awk '{print $1}'"));
         }
+
+        return self::$serverIP;
     }
 }
