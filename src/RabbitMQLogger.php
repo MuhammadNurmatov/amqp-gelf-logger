@@ -13,7 +13,7 @@ class RabbitMQLogger
 
         $fallbackHandler = new RotatingFileHandler(
             $LogConfig['path'] ?? storage_path('logs/laravel.log'),
-            14,
+                $LogConfig['days'] ?? 14,
             Logger::toMonologLevel($LogConfig['level'] ?? 'debug')
         );
 

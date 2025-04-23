@@ -2,7 +2,6 @@
 
 namespace MuhammadN\AmqpGelfLogger;
 
-use Illuminate\Support\Facades\Log;
 use Monolog\Handler\HandlerInterface;
 use Monolog\LogRecord;
 use PhpAmqpLib\Exception\AMQPIOException;
@@ -23,7 +22,7 @@ class AmqpGelfLogHandler implements HandlerInterface
         try {
             return $this->primaryHandler->handle($record);
         } catch (AMQPIOException $e) {
-            Log::channel('daily')->error($e->getMessage());
+            (new AMQPGelfDefaultChannelHandler())->handle($record, $e);
         }
 
         return $this->fallbackHandler->handle($record);
