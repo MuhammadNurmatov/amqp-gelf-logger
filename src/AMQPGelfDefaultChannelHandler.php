@@ -25,7 +25,7 @@ class AMQPGelfDefaultChannelHandler
 
     public function handle(LogRecord $record, ?AMQPIOException $e = null):void
     {
-        $record->with(message: $e->getMessage(), context:$e->getTraceAsString());
+        $record->with(message: $e->getMessage(), context:['exception' => $e]);
         $this->fallbackHandler->handle($record);
     }
 
