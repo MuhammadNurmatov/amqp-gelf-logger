@@ -22,7 +22,7 @@ class AmqpGelfLogHandler implements HandlerInterface
         try {
             return $this->primaryHandler->handle($record);
         } catch (AMQPIOException $e) {
-            (new AMQPGelfDefaultChannelHandler())->handle($record, $e);
+            (new AMQPGelfDefaultChannelHandler())->handle($e);
         }
 
         return $this->fallbackHandler->handle($record);

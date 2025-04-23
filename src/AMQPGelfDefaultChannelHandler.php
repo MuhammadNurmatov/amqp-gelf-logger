@@ -2,7 +2,9 @@
 
 namespace MuhammadN\AmqpGelfLogger;
 
+use DateTimeImmutable;
 use Monolog\Handler\RotatingFileHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\LogRecord;
 use PhpAmqpLib\Exception\AMQPIOException;
@@ -23,15 +25,29 @@ class AMQPGelfDefaultChannelHandler
         $this->fallbackHandler = $fallbackHandler;
     }
 
-    public function handle(LogRecord $record, ?AMQPIOException $e = null):void
+    public function handle(AMQPIOException $e ):void
     {
-        $record->with(message: $e->getMessage(), context:['exception' => $e]);
+       $record = $this->createRecordFromException($e);
         $this->fallbackHandler->handle($record);
     }
 
     public function handleBatch(array $records): void
     {
         $this->fallbackHandler->handleBatch($records);
+    }
+
+    private function createRecordFromException(AMQPIOException $exception): LogRecord
+    {
+        return new LogRecord(
+            datetime: new DateTimeImmutable(),
+            channel: 'amqp-gelf-logger',
+            level: Level::Error,
+            message: $exception->getMessage(),
+            context: [
+                'exception' => $exception,
+                'error_details' => $exception->getTraceAsString(),
+            ],
+        );
     }
 
 
