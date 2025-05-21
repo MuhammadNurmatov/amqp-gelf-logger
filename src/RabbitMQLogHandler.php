@@ -4,6 +4,7 @@ namespace MuhammadN\AmqpGelfLogger;
 
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\LogRecord;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPSSLConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -13,6 +14,9 @@ class RabbitMQLogHandler extends AbstractProcessingHandler
     private static AMQPStreamConnection|AMQPSSLConnection|null $connection = null;
     public ?array $config;
     public ?array $logConfig;
+
+    private static ?AMQPChannel $channel = null;
+
     public function __construct(array $logConfig) {
 
         parent::__construct($logConfig['level']);
@@ -76,9 +80,12 @@ class RabbitMQLogHandler extends AbstractProcessingHandler
 
     private function publish(LogRecord $record): void
     {
-        $channel = self::$connection->channel();
-        $formatted = $this->getFormatter()->format($record);
 
+        if (self::$channel === null || !self::$channel->is_open()) {
+            self::$channel = self::$connection->channel();
+        }
+
+        $formatted = $this->getFormatter()->format($record);
         $msg = new AMQPMessage(
             $formatted,
             [
@@ -88,13 +95,18 @@ class RabbitMQLogHandler extends AbstractProcessingHandler
         );
 
         $routingKey = $this->config['routing_key'] ?? $record->channel;
-        $channel->basic_publish($msg, $this->config['exchange'], $routingKey);
+        self::$channel->basic_publish($msg, $this->config['exchange'], $routingKey);
 
-        $channel->close();
     }
 
     public function __destruct()
     {
+
+        if (self::$channel !== null) {
+            self::$channel->close();
+            self::$channel = null;
+        }
+
         if (self::$connection !== null) {
             self::$connection->close();
             self::$connection = null;
