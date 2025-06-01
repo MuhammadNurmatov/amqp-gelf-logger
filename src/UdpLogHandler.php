@@ -18,6 +18,14 @@ class UdpLogHandler extends AbstractProcessingHandler
 
         $this->config = config('amqp-gelf-logger.udp');
         $this->socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+
+        $localPort = $this->config['local_port'] ?? 0;
+        socket_set_option($this->socket, SOL_SOCKET, SO_REUSEADDR, 1);
+        if (!socket_bind($this->socket, '0.0.0.0', $localPort)) {
+            $error = socket_strerror(socket_last_error($this->socket));
+            throw new RuntimeException("Failed to bind UDP socket on port {$localPort}: {$error}");
+        }
+
     }
 
     protected function write(LogRecord $record): void
@@ -43,4 +51,10 @@ class UdpLogHandler extends AbstractProcessingHandler
 
     }
 
+    public function __destruct()
+    {
+        if ($this->socket !== null) {
+            socket_close($this->socket);
+        }
+    }
 }
