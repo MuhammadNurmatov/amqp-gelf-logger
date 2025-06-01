@@ -2,30 +2,20 @@
 
 namespace MuhammadN\AmqpGelfLogger;
 
+use Illuminate\Support\Facades\Log;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
 use Monolog\LogRecord;
+use MuhammadN\AmqpGelfLogger\Services\UdpSocketService;
 use RuntimeException;
 
 class UdpLogHandler extends AbstractProcessingHandler
 {
-
-    protected ?array $config;
     protected $socket = null;
-    public function __construct(Level $level)
+    public function __construct(Level $level, UdpSocketService $socket)
     {
         parent::__construct($level);
-
-        $this->config = config('amqp-gelf-logger.udp');
-        $this->socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-
-        $localPort = $this->config['local_port'] ?? 0;
-        socket_set_option($this->socket, SOL_SOCKET, SO_REUSEADDR, 1);
-        if (!socket_bind($this->socket, '0.0.0.0', $localPort)) {
-            $error = socket_strerror(socket_last_error($this->socket));
-            throw new RuntimeException("Failed to bind UDP socket on port {$localPort}: {$error}");
-        }
-
+        $this->socket = $socket;
     }
 
     protected function write(LogRecord $record): void
@@ -35,26 +25,11 @@ class UdpLogHandler extends AbstractProcessingHandler
             throw new RuntimeException("Failed to JSON-encode the log record.");
         }
 
-        $sent = socket_sendto(
-            $this->socket,
-            $formatted,
-            strlen($formatted),
-            0,
-            $this->config['host'],
-            $this->config['port']
-        );
-
+        $sent = $this->socket->send($formatted);
         if ($sent === false) {
             $error = socket_strerror(socket_last_error($this->socket));
             throw new RuntimeException("Failed to send UDP packet: {$error}");
         }
-
     }
 
-    public function __destruct()
-    {
-        if ($this->socket !== null) {
-            socket_close($this->socket);
-        }
-    }
 }
