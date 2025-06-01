@@ -1,6 +1,6 @@
 {
     "name": "muhammadnurmatov/amqp-gelf-logger",
-    "version": "v1.0.10",
+    "version": "v1.1.0",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -19,7 +19,8 @@
     "require": {
         "php": "^8.0",
         "laravel/framework": "^9.0|^10.0|^11.0",
-        "php-amqplib/php-amqplib": "^3.7"
+        "php-amqplib/php-amqplib": "^3.7",
+        "ext-sockets": "*"
     },
 
     "minimum-stability": "dev",

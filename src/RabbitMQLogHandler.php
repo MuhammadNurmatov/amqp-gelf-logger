@@ -13,7 +13,6 @@ class RabbitMQLogHandler extends AbstractProcessingHandler
 {
     private static AMQPStreamConnection|AMQPSSLConnection|null $connection = null;
     public ?array $config;
-    public ?array $logConfig;
 
     private static ?AMQPChannel $channel = null;
 
@@ -22,7 +21,6 @@ class RabbitMQLogHandler extends AbstractProcessingHandler
         parent::__construct($logConfig['level']);
 
        $this->config = config('amqp-gelf-logger.rabbitmq');
-       $this->logConfig = $logConfig;
     }
 
     protected function write(LogRecord $record): void
