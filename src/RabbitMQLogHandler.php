@@ -3,6 +3,7 @@
 namespace MuhammadN\AmqpGelfLogger;
 
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Level;
 use Monolog\LogRecord;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPSSLConnection;
@@ -16,9 +17,9 @@ class RabbitMQLogHandler extends AbstractProcessingHandler
 
     private static ?AMQPChannel $channel = null;
 
-    public function __construct(array $logConfig) {
+    public function __construct(Level $level) {
 
-        parent::__construct($logConfig['level']);
+        parent::__construct($level);
 
        $this->config = config('amqp-gelf-logger.rabbitmq');
     }

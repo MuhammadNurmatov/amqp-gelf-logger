@@ -8,13 +8,15 @@ class RabbitMQLogger
 {
     public function __invoke(array $LogConfig): Logger
     {
-        $rabbitMqLogHandler = new RabbitMQLogHandler($LogConfig);
+        $level =  Logger::toMonologLevel($LogConfig['level'] ?? 'debug');
+
+        $rabbitMqLogHandler = new RabbitMQLogHandler($level);
         $rabbitMqLogHandler->setFormatter(new AmqpGelfLoggerFormater());
 
         $fallbackHandler = new RotatingFileHandler(
             $LogConfig['path'] ?? storage_path('logs/laravel.log'),
-                $LogConfig['days'] ?? 14,
-            Logger::toMonologLevel($LogConfig['level'] ?? 'debug')
+            $LogConfig['days'] ?? 14,
+            $level
         );
 
         $fallbackHandler->setFormatter(new AmqpGelfLoggerFormater());
