@@ -9,13 +9,15 @@ class UdpLogger
 {
     public function __invoke(array $logConfig)
     {
-        $udpLogHandler =  new UdpLogHandler($logConfig['level'] ?? 'debug');
+        $level = Logger::toMonologLevel($logConfig['level'] ?? 'debug');
+
+        $udpLogHandler =  new UdpLogHandler($level);
         $udpLogHandler->setFormatter(new AmqpGelfLoggerFormater());
 
         $fallbackHandler = new RotatingFileHandler(
             $logConfig['path'] ?? storage_path('logs/laravel.log'),
-                $logConfig['days'] ?? 14,
-            Logger::toMonologLevel($logConfig['level'] ?? 'debug')
+            $logConfig['days'] ?? 14,
+            $level
         );
         $fallbackHandler->setFormatter(new AmqpGelfLoggerFormater());
 

@@ -3,6 +3,7 @@
 namespace MuhammadN\AmqpGelfLogger;
 
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Level;
 use Monolog\LogRecord;
 use RuntimeException;
 
@@ -11,7 +12,7 @@ class UdpLogHandler extends AbstractProcessingHandler
 
     protected ?array $config;
     protected $socket = null;
-    public function __construct(string $level)
+    public function __construct(Level $level)
     {
         parent::__construct($level);
 
