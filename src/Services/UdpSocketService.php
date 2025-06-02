@@ -2,9 +2,10 @@
 
 namespace MuhammadN\AmqpGelfLogger\Services;
 
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
 use RuntimeException;
 
-class UdpSocketService
+class UdpSocketService implements AmqpGelfTransportContract
 {
     private $socket = null;
     public array $config;

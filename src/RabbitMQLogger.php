@@ -3,6 +3,7 @@
 namespace MuhammadN\AmqpGelfLogger;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
 
 class RabbitMQLogger
 {
@@ -10,7 +11,7 @@ class RabbitMQLogger
     {
         $level =  Logger::toMonologLevel($LogConfig['level'] ?? 'debug');
 
-        $rabbitMqLogHandler = new RabbitMQLogHandler($level);
+        $rabbitMqLogHandler = new RabbitMQLogHandler($level, app(AMQPGelfTransportContract::class));
         $rabbitMqLogHandler->setFormatter(new AmqpGelfLoggerFormater());
 
         $fallbackHandler = new RotatingFileHandler(
@@ -24,7 +25,7 @@ class RabbitMQLogger
 
         $logger = new Logger($LogConfig['name']);
         $logger->pushHandler(
-            new AmqpGelfLogHandler($rabbitMqLogHandler, $fallbackHandler)
+            new UnifiedLogHandler($rabbitMqLogHandler, $fallbackHandler)
         );
 
         return $logger;

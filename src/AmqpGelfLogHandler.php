@@ -2,49 +2,34 @@
 
 namespace MuhammadN\AmqpGelfLogger;
 
-use Monolog\Handler\HandlerInterface;
-use Monolog\LogRecord;
-use PhpAmqpLib\Exception\AMQPIOException;
+use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Level;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
 
-class AmqpGelfLogHandler implements HandlerInterface
+class AmqpGelfLogHandler
 {
-    protected $primaryHandler;
-    protected $fallbackHandler;
+    public Level $level;
+    public ?AmqpGelfTransportContract $transport = null;
 
-    public function __construct(HandlerInterface $primaryHandler, HandlerInterface $fallbackHandler)
+    public ?AbstractProcessingHandler $logHandler = null;
+    public function __construct(?AmqpGelfTransportContract $transport)
     {
-        $this->primaryHandler = $primaryHandler;
-        $this->fallbackHandler = $fallbackHandler;
+        $this->transport = $transport;
     }
 
-    public function handle(LogRecord $record): bool
+    public  function setHandler(string $transport)
     {
-        try {
-            return $this->primaryHandler->handle($record);
-        } catch (AMQPIOException $e) {
-            (new AMQPGelfDefaultChannelHandler())->handle($e);
-        }
-
-        return $this->fallbackHandler->handle($record);
+        $this->logHandler = match($transport) {
+            TransportEnum::UDP->value => new UdpLogHandler($this->level, $this->transport),
+            TransportEnum::RABBITMQ->value => new RabbitMQLogHandler($this->level, $this->transport),
+            default => null
+        };
     }
 
-    public function isHandling(LogRecord $record): bool
+    public function setLevel(Level $level): void
     {
-        return $this->primaryHandler->isHandling($record);
+        $this->level = $level;
     }
 
-    public function handleBatch(array $records): void
-    {
-        try {
-            $this->primaryHandler->handleBatch($records);
-        } catch (\Exception $e) {
-            $this->fallbackHandler->handleBatch($records);
-        }
-    }
 
-    public function close(): void
-    {
-        $this->primaryHandler->close();
-        $this->fallbackHandler->close();
-    }
 }

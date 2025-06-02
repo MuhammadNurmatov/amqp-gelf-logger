@@ -2,17 +2,16 @@
 
 namespace MuhammadN\AmqpGelfLogger;
 
-use Illuminate\Support\Facades\Log;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
 use Monolog\LogRecord;
-use MuhammadN\AmqpGelfLogger\Services\UdpSocketService;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
 use RuntimeException;
 
 class UdpLogHandler extends AbstractProcessingHandler
 {
     protected $socket = null;
-    public function __construct(Level $level, UdpSocketService $socket)
+    public function __construct(Level $level, ?AmqpGelfTransportContract $socket)
     {
         parent::__construct($level);
         $this->socket = $socket;
@@ -26,6 +25,7 @@ class UdpLogHandler extends AbstractProcessingHandler
         }
 
         $sent = $this->socket->send($formatted);
+
         if ($sent === false) {
             $error = socket_strerror(socket_last_error($this->socket));
             throw new RuntimeException("Failed to send UDP packet: {$error}");

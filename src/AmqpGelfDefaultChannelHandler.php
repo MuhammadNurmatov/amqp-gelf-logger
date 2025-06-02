@@ -9,7 +9,7 @@ use Monolog\Logger;
 use Monolog\LogRecord;
 use PhpAmqpLib\Exception\AMQPIOException;
 
-class AMQPGelfDefaultChannelHandler
+class AmqpGelfDefaultChannelHandler
 {
     private $fallbackHandler;
     public function __construct()
@@ -25,9 +25,9 @@ class AMQPGelfDefaultChannelHandler
         $this->fallbackHandler = $fallbackHandler;
     }
 
-    public function handle(AMQPIOException $e ):void
+    public function handle(mixed $message):void
     {
-       $record = $this->createRecordFromException($e);
+       $record = $this->createRecordFromException($message);
         $this->fallbackHandler->handle($record);
     }
 
@@ -36,17 +36,13 @@ class AMQPGelfDefaultChannelHandler
         $this->fallbackHandler->handleBatch($records);
     }
 
-    private function createRecordFromException(AMQPIOException $exception): LogRecord
+    private function createRecordFromException(mixed $message): LogRecord
     {
         return new LogRecord(
             datetime: new DateTimeImmutable(),
             channel: 'amqp-gelf-logger',
             level: Level::Error,
-            message: $exception->getMessage(),
-            context: [
-                'exception' => $exception,
-                'error_details' => $exception->getTraceAsString(),
-            ],
+            message: $message,
         );
     }
 

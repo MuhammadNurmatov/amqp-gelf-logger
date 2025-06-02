@@ -2,10 +2,9 @@
 
 namespace MuhammadN\AmqpGelfLogger;
 
-use Illuminate\Contracts\Container\Container;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
-use MuhammadN\AmqpGelfLogger\Services\UdpSocketService;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
 
 class UdpLogger
 {
@@ -15,7 +14,7 @@ class UdpLogger
         $level = Logger::toMonologLevel($logConfig['level'] ?? 'debug');
 
 
-        $udpLogHandler =  new UdpLogHandler($level, app()->make(UdpSocketService::class));
+        $udpLogHandler =  new UdpLogHandler($level, app(AmqpGelfTransportContract::class));
         $udpLogHandler->setFormatter(new AmqpGelfLoggerFormater());
 
         $fallbackHandler = new RotatingFileHandler(
@@ -27,7 +26,7 @@ class UdpLogger
 
         $logger = new Logger($logConfig['name']);
         $logger->pushHandler(
-            new AmqpGelfLogHandler($udpLogHandler, $fallbackHandler)
+            new UnifiedLogHandler($udpLogHandler, $fallbackHandler)
         );
 
         return $logger;
