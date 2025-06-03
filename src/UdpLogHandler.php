@@ -5,13 +5,13 @@ namespace MuhammadN\AmqpGelfLogger;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
 use Monolog\LogRecord;
-use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfServiceContract;
 use RuntimeException;
 
 class UdpLogHandler extends AbstractProcessingHandler
 {
     protected $socket = null;
-    public function __construct(Level $level, ?AmqpGelfTransportContract $socket)
+    public function __construct(Level $level, ?AmqpGelfServiceContract $socket)
     {
         parent::__construct($level);
         $this->socket = $socket;

@@ -4,24 +4,25 @@ namespace MuhammadN\AmqpGelfLogger;
 
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
-use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfServiceContract;
 
 class AmqpGelfLogHandler
 {
     public Level $level;
-    public ?AmqpGelfTransportContract $transport = null;
+    public ?AmqpGelfServiceContract $service = null;
 
     public ?AbstractProcessingHandler $logHandler = null;
-    public function __construct(?AmqpGelfTransportContract $transport)
+    public function __construct(Level $level, ?AmqpGelfServiceContract $service)
     {
-        $this->transport = $transport;
+        $this->level = $level;
+        $this->service = $service;
     }
 
     public  function setHandler(string $transport)
     {
         $this->logHandler = match($transport) {
-            TransportEnum::UDP->value => new UdpLogHandler($this->level, $this->transport),
-            TransportEnum::RABBITMQ->value => new RabbitMQLogHandler($this->level, $this->transport),
+            TransportEnum::UDP->value => new UdpLogHandler($this->level, $this->service),
+            TransportEnum::RABBITMQ->value => new RabbitMQLogHandler($this->level, $this->service),
             default => null
         };
     }

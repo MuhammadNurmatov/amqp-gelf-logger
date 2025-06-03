@@ -2,13 +2,13 @@
 
 namespace MuhammadN\AmqpGelfLogger\Services;
 
-use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfServiceContract;
 use PhpAmqpLib\Connection\AMQPSSLConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Message\AMQPMessage;
 
-class RabbitMQService implements AmqpGelfTransportContract
+class RabbitMQService implements AmqpGelfServiceContract
 {
 
     private  AMQPStreamConnection|AMQPSSLConnection|null $connection = null;

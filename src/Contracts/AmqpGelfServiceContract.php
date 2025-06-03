@@ -2,7 +2,7 @@
 
 namespace MuhammadN\AmqpGelfLogger\Contracts;
 
-interface AmqpGelfTransportContract
+interface AmqpGelfServiceContract
 {
     public function send(mixed $message);
 }

@@ -4,6 +4,7 @@ namespace MuhammadN\AmqpGelfLogger;
 
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfServiceContract;
 
 class AmqpGelfLogger
 {
@@ -11,9 +12,10 @@ class AmqpGelfLogger
     {
         $level = Logger::toMonologLevel($logConfig['level'] ?? 'debug');
 
-        $amqpLogHandler = app(AmqpGelfLogHandler::class);
-        $amqpLogHandler?->setLevel($level);
-        $amqpLogHandler?->setFormatter(new AmqpGelfLoggerFormater());
+        $service = app(AmqpGelfServiceContract::class);
+        $amqpLogHandler = new AmqpGelfLogHandler($level, $service);
+        $amqpLogHandler->setHandler(config('amqp-gelf-logger.transport'));
+        $amqpLogHandler->logHandler?->setFormatter(new AmqpGelfLoggerFormater());
 
         $fallbackHandler = new RotatingFileHandler(
             $logConfig['path'] ?? storage_path('logs/laravel.log'),
@@ -24,7 +26,7 @@ class AmqpGelfLogger
 
         $logger = new Logger($logConfig['name']);
         $logger->pushHandler(
-            new UnifiedLogHandler($amqpLogHandler, $fallbackHandler)
+            new UnifiedLogHandler($amqpLogHandler?->logHandler, $fallbackHandler)
         );
 
         return $logger;

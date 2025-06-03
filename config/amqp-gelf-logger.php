@@ -1,6 +1,9 @@
 <?php
 
 return [
+
+    'transport' => env('AMQP_GELF_TRANSPORT', 'udp'),
+
     'rabbitmq' => [
         'host' => env('LOG_RABBITMQ_HOST'),
         'port' => env('LOG_RABBITMQ_PORT'),
@@ -22,6 +25,7 @@ return [
         'path' => storage_path('logs/logger/logs.log'),
         'days' => 14,
     ],
+
     'udp' => [
         'host' => env('LOG_UDP_HOST', '127.0.0.1'),
         'port' => env('LOG_UDP_PORT', 555),

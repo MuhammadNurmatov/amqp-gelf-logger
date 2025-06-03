@@ -2,7 +2,7 @@
 
 namespace MuhammadN\AmqpGelfLogger\Services;
 
-use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfServiceContract;
 use MuhammadN\AmqpGelfLogger\TransportEnum;
 
 class AmqpGelfService
@@ -13,7 +13,7 @@ class AmqpGelfService
         $this->config = $config;
     }
 
-    public function factory(string $transport): AmqpGelfTransportContract
+    public function factory(string $transport): AmqpGelfServiceContract
     {
         return match ($transport) {
             TransportEnum::UDP->value => new UdpSocketService($this->config),

@@ -5,15 +5,15 @@ namespace MuhammadN\AmqpGelfLogger;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
 use Monolog\LogRecord;
-use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfServiceContract;
 use RuntimeException;
 
 class RabbitMQLogHandler extends AbstractProcessingHandler
 {
 
     public ?array $config;
-    public ?AmqpGelfTransportContract $rabbit;
-    public function __construct(Level $level, ?AmqpGelfTransportContract $rabbit) {
+    public ?AmqpGelfServiceContract $rabbit;
+    public function __construct(Level $level, ?AmqpGelfServiceContract $rabbit) {
 
         parent::__construct($level);
         $this->rabbit = $rabbit;

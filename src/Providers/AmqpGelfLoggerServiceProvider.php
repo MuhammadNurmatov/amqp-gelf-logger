@@ -4,7 +4,7 @@ namespace MuhammadN\AmqpGelfLogger\Providers;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use MuhammadN\AmqpGelfLogger\AmqpGelfLogHandler;
+use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfServiceContract;
 use MuhammadN\AmqpGelfLogger\Services\AmqpGelfService;
 
 class AmqpGelfLoggerServiceProvider extends ServiceProvider
@@ -12,16 +12,12 @@ class AmqpGelfLoggerServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton(AmqpGelfLogHandler::class, function () {
+        $this->app->singleton(AmqpGelfServiceContract::class, function () {
             $config = config('amqp-gelf-logger');
+            $transport = config('amqp-gelf-logger.transport');
             try {
-                $transport = $config['transport'];
-                $service =  (new AmqpGelfService($config[$transport]))->factory($transport);
-
-                $handler = new AmqpGelfLogHandler($service);
-                $handler->setHandler($transport);
-
-                return $handler;
+                $service = new AmqpGelfService($config[$transport]);
+                return $service->factory($transport);
             } catch (\Exception $e)
             {
                 Log::build([
