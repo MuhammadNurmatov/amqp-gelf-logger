@@ -7,7 +7,6 @@ use Monolog\Handler\RotatingFileHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\LogRecord;
-use PhpAmqpLib\Exception\AMQPIOException;
 
 class AmqpGelfDefaultChannelHandler
 {

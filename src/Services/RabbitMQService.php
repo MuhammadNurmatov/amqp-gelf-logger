@@ -82,7 +82,6 @@ class RabbitMQService implements AmqpGelfTransportContract
         $this->connection->channel();
     }
 
-
     private function publish(mixed $message): void
     {
         $msg = new AMQPMessage(

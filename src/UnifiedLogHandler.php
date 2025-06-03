@@ -4,14 +4,13 @@ namespace MuhammadN\AmqpGelfLogger;
 
 use Monolog\Handler\HandlerInterface;
 use Monolog\LogRecord;
-use PhpAmqpLib\Exception\AMQPIOException;
 
 class UnifiedLogHandler implements HandlerInterface
 {
     protected $primaryHandler;
     protected $fallbackHandler;
 
-    public function __construct(HandlerInterface $primaryHandler, HandlerInterface $fallbackHandler)
+    public function __construct(?HandlerInterface $primaryHandler, HandlerInterface $fallbackHandler)
     {
         $this->primaryHandler = $primaryHandler;
         $this->fallbackHandler = $fallbackHandler;
@@ -21,7 +20,7 @@ class UnifiedLogHandler implements HandlerInterface
     {
         try {
             return $this->primaryHandler->handle($record);
-        } catch (AMQPIOException $e) {
+        } catch (\Exception $e) {
             (new AmqpGelfDefaultChannelHandler())->handle($e);
         }
 

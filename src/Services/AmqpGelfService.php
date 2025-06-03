@@ -3,7 +3,6 @@
 namespace MuhammadN\AmqpGelfLogger\Services;
 
 use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfTransportContract;
-use MuhammadN\AmqpGelfLogger\RabbitMQLogHandler;
 use MuhammadN\AmqpGelfLogger\TransportEnum;
 
 class AmqpGelfService
