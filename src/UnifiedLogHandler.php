@@ -20,7 +20,7 @@ class UnifiedLogHandler implements HandlerInterface
     {
         try {
             return $this->primaryHandler->handle($record);
-        } catch (\Exception $e) {
+        } catch (\Exception | \Throwable $e) {
             (new AmqpGelfDefaultChannelHandler())->handle($e->getMessage());
         }
 

@@ -18,7 +18,7 @@ class AmqpGelfLoggerServiceProvider extends ServiceProvider
             try {
                 $service = new AmqpGelfService($config[$transport]);
                 return $service->factory($transport);
-            } catch (\Exception $e)
+            } catch (\Exception | \Throwable $e)
             {
                 Log::build([
                     'driver' => 'single',
