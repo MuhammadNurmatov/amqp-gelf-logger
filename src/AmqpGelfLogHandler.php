@@ -16,11 +16,12 @@ class AmqpGelfLogHandler
     {
         $this->level = $level;
         $this->service = $service;
+        $this->setHandler();
     }
 
-    public  function setHandler(string $transport)
+    public  function setHandler()
     {
-        $this->logHandler = match($transport) {
+        $this->logHandler = match($this->service->transport()) {
             TransportEnum::UDP->value => new UdpLogHandler($this->level, $this->service),
             TransportEnum::RABBITMQ->value => new RabbitMQLogHandler($this->level, $this->service),
             default => null

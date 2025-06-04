@@ -3,6 +3,7 @@
 namespace MuhammadN\AmqpGelfLogger\Services;
 
 use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfServiceContract;
+use MuhammadN\AmqpGelfLogger\TransportEnum;
 use PhpAmqpLib\Connection\AMQPSSLConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -17,7 +18,6 @@ class RabbitMQService implements AmqpGelfServiceContract
     public ?array $config;
 
 
-
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -28,6 +28,11 @@ class RabbitMQService implements AmqpGelfServiceContract
     public function send(mixed $message): void
     {
         $this->publish($message);
+    }
+
+    public function transport(): string
+    {
+        return TransportEnum::RABBITMQ->value;
     }
 
 

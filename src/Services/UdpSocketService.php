@@ -3,6 +3,7 @@
 namespace MuhammadN\AmqpGelfLogger\Services;
 
 use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfServiceContract;
+use MuhammadN\AmqpGelfLogger\TransportEnum;
 use RuntimeException;
 
 class UdpSocketService implements AmqpGelfServiceContract
@@ -21,7 +22,7 @@ class UdpSocketService implements AmqpGelfServiceContract
     {
         $localPort = $this->config['local_port'] ?? 0;
         $localHost = $this->config['local_host'] ?? '0.0.0.0';
-        socket_set_option($this->socket, SOL_SOCKET, SO_REUSEADDR, 1);
+        socket_set_option($this->socket, SOL_SOCKET, SO_SNDBUF, $this->config['max_buffer'] ?? 1400);
         if (!socket_bind($this->socket, $localHost, $localPort)) {
             $error = socket_strerror(socket_last_error($this->socket));
             throw new RuntimeException("Failed to bind UDP socket on port {$localPort}: {$error}");
@@ -45,6 +46,11 @@ class UdpSocketService implements AmqpGelfServiceContract
             $this->config['host'],
             $this->config['port']
         );
+    }
+
+    public function transport(): string
+    {
+        return TransportEnum::UDP->value;
     }
 
     public function __destruct()

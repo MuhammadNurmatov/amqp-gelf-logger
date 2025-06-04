@@ -14,7 +14,6 @@ class AmqpGelfLogger
 
         $service = app(AmqpGelfServiceContract::class);
         $amqpLogHandler = new AmqpGelfLogHandler($level, $service);
-        $amqpLogHandler->setHandler(config('amqp-gelf-logger.transport'));
         $amqpLogHandler->logHandler?->setFormatter(new AmqpGelfLoggerFormater());
 
         $fallbackHandler = new RotatingFileHandler(

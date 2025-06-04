@@ -30,6 +30,7 @@ return [
         'host' => env('LOG_UDP_HOST', '127.0.0.1'),
         'port' => env('LOG_UDP_PORT', 555),
         'local_port' => env('LOG_UDP_LOCAL_PORT', 555),
+        'max_buffer' => env('LOG_UDP_MAX_BUFFER', 20000), //20kb
         'app_name' => env('APP_NAME', 'Laravel'),
         'app_env' => env('APP_ENV', 'production'),
         'level' => env('RABBITMQ_LOG_LEVEL', 'debug'),
