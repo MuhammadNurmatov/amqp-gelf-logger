@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'transport' => env('AMQP_GELF_TRANSPORT', 'udp'),
 
     'level' => env('RABBITMQ_LOG_LEVEL', 'debug'),
