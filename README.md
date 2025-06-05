@@ -51,7 +51,7 @@ return [
     'udp' => [
         'host' => env('LOG_UDP_HOST', '127.0.0.1'),
         'port' => env('LOG_UDP_PORT', 555),
-        'max_buffer' => env('LOG_UDP_MAX_BUFFER', 20000), //20kb
+        'max_buffer' => env('LOG_UDP_MAX_BUFFER', 1024*20), //20kb
     ],
 
     'tcp' => [
