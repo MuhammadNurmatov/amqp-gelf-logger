@@ -17,6 +17,7 @@ class AmqpGelfService
     {
         return match ($transport) {
             TransportEnum::UDP->value => new UdpSocketService($this->config),
+            TransportEnum::TCP->value => new TcpSocketService($this->config),
             TransportEnum::RABBITMQ->value => new RabbitMQService($this->config),
             default => null
         };

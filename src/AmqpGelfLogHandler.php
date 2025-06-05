@@ -23,6 +23,7 @@ class AmqpGelfLogHandler
     {
         $this->logHandler = match($this->service?->transport()) {
             TransportEnum::UDP->value => new UdpLogHandler($this->level, $this->service),
+            TransportEnum::TCP->value => new TcpLogHandler($this->level, $this->service),
             TransportEnum::RABBITMQ->value => new RabbitMQLogHandler($this->level, $this->service),
             default => null
         };

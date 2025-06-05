@@ -4,6 +4,10 @@ return [
 
     'transport' => env('AMQP_GELF_TRANSPORT', 'udp'),
 
+    'level' => env('RABBITMQ_LOG_LEVEL', 'debug'),
+    'path' => storage_path('logs/amqp-gelf-logger/logs.log'),
+    'days' => 14,
+
     'rabbitmq' => [
         'host' => env('LOG_RABBITMQ_HOST'),
         'port' => env('LOG_RABBITMQ_PORT'),
@@ -19,21 +23,16 @@ return [
         'cafile' => env('LOG_RABBITMQ_CAFILE', ''),
         'local_cert' => env('LOG_RABBITMQ_LOCAL_CERT', ''),
         'local_pk' => env('LOG_RABBITMQ_LOCAL_PK', ''),
-        'app_name' => env('APP_NAME', 'Laravel'),
-        'app_env' => env('APP_ENV', 'production'),
-        'level' => env('RABBITMQ_LOG_LEVEL', 'debug'),
-        'path' => storage_path('logs/logger/logs.log'),
-        'days' => 14,
     ],
 
     'udp' => [
         'host' => env('LOG_UDP_HOST', '127.0.0.1'),
         'port' => env('LOG_UDP_PORT', 555),
         'max_buffer' => env('LOG_UDP_MAX_BUFFER', 20000), //20kb
-        'app_name' => env('APP_NAME', 'Laravel'),
-        'app_env' => env('APP_ENV', 'production'),
-        'level' => env('RABBITMQ_LOG_LEVEL', 'debug'),
-        'path' => storage_path('logs/logger/logs.log'),
-        'days' => 14,
+    ],
+
+    'tcp' => [
+        'host' => env('LOG_UDP_HOST', '127.0.0.1'),
+        'port' => env('LOG_UDP_PORT', 555),
     ]
 ];
