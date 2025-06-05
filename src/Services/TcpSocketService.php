@@ -28,7 +28,7 @@ class TcpSocketService implements AmqpGelfServiceContract
 
     public function transport(): string
     {
-        return TransportEnum::UDP->value;
+        return TransportEnum::TCP->value;
     }
 
     public function __destruct()
