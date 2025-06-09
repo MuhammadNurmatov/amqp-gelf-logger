@@ -31,7 +31,7 @@ return [
     ],
 
     'tcp' => [
-        'host' => env('LOG_UDP_HOST', '127.0.0.1'),
-        'port' => env('LOG_UDP_PORT', 555),
+        'host' => env('LOG_TCP_HOST', '127.0.0.1'),
+        'port' => env('LOG_TCP_PORT', 555),
     ]
 ];
