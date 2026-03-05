@@ -18,10 +18,12 @@ class UnifiedLogHandler implements HandlerInterface
 
     public function handle(LogRecord $record): bool
     {
-        try {
-            return $this->primaryHandler->handle($record);
-        } catch (\Exception | \Throwable $e) {
-            (new AmqpGelfDefaultChannelHandler())->handle($e->getMessage());
+        if ($this->primaryHandler && $this->primaryHandler->isHandling($record)) {
+            try {
+                return $this->primaryHandler->handle($record);
+            } catch (\Exception | \Throwable $e) {
+                (new AmqpGelfDefaultChannelHandler())->handle($e->getMessage());
+            }
         }
 
         return $this->fallbackHandler->handle($record);
@@ -29,21 +31,30 @@ class UnifiedLogHandler implements HandlerInterface
 
     public function isHandling(LogRecord $record): bool
     {
-        return $this->primaryHandler->isHandling($record);
+        if ($this->primaryHandler && $this->primaryHandler->isHandling($record)) {
+            return true;
+        }
+
+        return $this->fallbackHandler->isHandling($record);
     }
 
     public function handleBatch(array $records): void
     {
-        try {
-            $this->primaryHandler->handleBatch($records);
-        } catch (\Exception $e) {
-            $this->fallbackHandler->handleBatch($records);
+        if ($this->primaryHandler) {
+            try {
+                $this->primaryHandler->handleBatch($records);
+                return;
+            } catch (\Exception | \Throwable$e) {
+                (new AmqpGelfDefaultChannelHandler())->handle($e->getMessage());
+            }
         }
+
+        $this->fallbackHandler->handleBatch($records);
     }
 
     public function close(): void
     {
-        $this->primaryHandler->close();
+        $this->primaryHandler?->close();
         $this->fallbackHandler->close();
     }
 }
