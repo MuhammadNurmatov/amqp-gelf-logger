@@ -44,10 +44,32 @@ class AmqpGelfLoggerFormater extends JsonFormatter
 
     private function initServerIP(): ?string
     {
-        if (self::$serverIP == null) {
-            self::$serverIP = trim(shell_exec("hostname -I | awk '{print $1}'"));
+        if (self::$serverIP === null) {
+            $ip = '';
+            if (PHP_OS_FAMILY === 'Linux' && function_exists('shell_exec')) {
+                $ip = trim((string) shell_exec("hostname -I 2>/dev/null | awk '{print $1}'"));
+            }
+
+            self::$serverIP = $ip !== '' ? $ip : self::outboundIP();
         }
 
         return self::$serverIP;
+    }
+
+    // UDP connect sends no packets, it only makes the OS pick the outgoing interface
+    private static function outboundIP(): ?string
+    {
+        $socket = @socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+        if ($socket === false) {
+            return null;
+        }
+
+        $ip = null;
+        if (@socket_connect($socket, '8.8.8.8', 53) && socket_getsockname($socket, $addr)) {
+            $ip = $addr;
+        }
+        socket_close($socket);
+
+        return $ip;
     }
 }
