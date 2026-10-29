@@ -4,7 +4,7 @@
 [![Total Downloads](https://poser.pugx.org/muhammadnurmatov/amqp-gelf-logger/downloads)](https://packagist.org/packages/muhammadnurmatov/amqp-gelf-logger)
 [![License](https://poser.pugx.org/muhammadnurmatov/amqp-gelf-logger/license)](https://packagist.org/packages/muhammadnurmatov/amqp-gelf-logger)
 
-A flexible logger for **Laravel 9+**, sending logs via **AMQP** or **GELF** directly to **Graylog** for real-time centralized logging and monitoring.
+A flexible logger for **Laravel 10+**, sending logs via **AMQP** or **GELF** directly to **Graylog** for real-time centralized logging and monitoring.
 
 ---
 
