@@ -27,8 +27,8 @@ class TcpLogHandler extends AbstractProcessingHandler
         $sent = $this->socket->send($formatted);
 
         if ($sent === false) {
-            $error = socket_strerror(socket_last_error($this->socket));
-            throw new RuntimeException("Failed to send UDP packet: {$error}");
+            $error = socket_strerror(socket_last_error());
+            throw new RuntimeException("Failed to send TCP packet: {$error}");
         }
     }
 

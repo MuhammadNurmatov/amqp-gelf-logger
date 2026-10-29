@@ -84,7 +84,7 @@ class RabbitMQService implements AmqpGelfServiceContract
 
     private function initChannel(): void
     {
-        $this->connection->channel();
+        $this->channel = $this->connection->channel();
     }
 
     private function publish(mixed $message): void

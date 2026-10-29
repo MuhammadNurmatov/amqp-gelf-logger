@@ -2,6 +2,7 @@
 
 namespace MuhammadN\AmqpGelfLogger\Services;
 
+use InvalidArgumentException;
 use MuhammadN\AmqpGelfLogger\Contracts\AmqpGelfServiceContract;
 use MuhammadN\AmqpGelfLogger\TransportEnum;
 
@@ -19,7 +20,7 @@ class AmqpGelfService
             TransportEnum::UDP->value => new UdpSocketService($this->config),
             TransportEnum::TCP->value => new TcpSocketService($this->config),
             TransportEnum::RABBITMQ->value => new RabbitMQService($this->config),
-            default => null
+            default => throw new InvalidArgumentException("Unsupported transport: {$transport}"),
         };
     }
 }
