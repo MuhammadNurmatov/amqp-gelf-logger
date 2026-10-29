@@ -1,6 +1,6 @@
 {
     "name": "muhammadnurmatov/amqp-gelf-logger",
-    "version": "v2.2.4",
+    "version": "v2.2.5",
     "type": "library",
     "license": "MIT",
     "autoload": {
